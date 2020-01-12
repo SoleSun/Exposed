@@ -7,7 +7,6 @@ chrome.webRequest.onBeforeRequest(function() {
 	console.log("uwu");
 });
 */
-document.body.style.background = 'yellow';
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.greeting == "hello") {
