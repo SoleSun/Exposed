@@ -5,7 +5,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://unpkg.com/">
-    <script src="scrollup.js"></script>
     <script src="https://unpkg.com/react@latest/umd/react.development.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@material-ui/core@latest/umd/material-ui.development.js" crossorigin="anonymous"></script>
@@ -17,11 +16,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="images/icon16.png">
   </head>
   <body>
-    <script>
-    window.onbeforeunload = function () {
-      window.scrollTo(0, 0);
-    }
-    </script>
       <div id="root"></div>
       <script type="text/babel">
   const {
@@ -96,19 +90,30 @@
   function createData(name, email, phone, address, payment) {
   return { name, email, phone, address, payment };
   }
-
-  const rows = [
+  let rows = [];
+  const localStorageKeys = Object.entries(localStorage);
+  for (const key in localStorageKeys) {
+    const content = JSON.parse(window.localStorage.getItem(key));
+    const email = content.email;
+    const phone = content.phone;
+    const address = content.address;
+    const payment = content.payment;
+    const newData = createData(key, email, phone, address, payment);
+    rows.push(newData);
+  }
+  // dummy data
+  const dummyData = [
     createData('Amazon', true, true, true, false),
     createData('Leetcode', true, false, false, false),
-    createData('Apple', true, true, true, false),
-    createData('Macleans', true, false, false, false),
-    createData('BMO', true, true, true, false),
+    createData('Apple', true, true, true, true),
+    createData('Macleans', true, false, false, true),
+    createData('BMO', true, true, true, true),
     createData('Canvas', true, false, false, false),
     createData('UBC SSC', true, false, false, false),
-    createData('Dance', true, true, true, false),
-    createData('With', true, false, false, false),
-    createData('Me', true, false, false, false),
+    createData('Dance Co', true, true, true, false),
+    createData('nwHacks', true, true, false, false),
   ];
+  rows = rows.concat(dummyData);
 
   function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
