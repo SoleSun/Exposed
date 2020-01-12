@@ -1,7 +1,7 @@
 {
-  "name": "Getting Started Example",
+  "name": "Exposed: who knows what about you",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "Tracking what entities have what information about you.",
   "permissions": [
     "activeTab",
     "declarativeContent",
@@ -9,11 +9,14 @@
     "tabs",
     "<all_urls>",
     "webRequest"],
-  "options_page": "options.html",
   "background": {
     "scripts": ["background.js"],
     "persistent": true
   },
+  "chrome_url_overrides":  {
+    "newtab": "overview.html"
+  },
+  "content_security_policy": "object-src 'self'; script-src 'self' 'sha256-x4F+86ypcCpLw83Chfsp2esWzAaA3g0ZW/dskTo6K94=' https://unpkg.com/",
   "content_scripts": [
    {
      "matches": [
@@ -24,8 +27,7 @@
      "run_at": "document_end"
    }
  ],
-  "page_action": {
-    "default_popup": "popup.html",
+  "browser_action": {
     "default_icon": {
       "16": "images/icon16.png",
       "32": "images/icon32.png",

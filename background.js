@@ -4,20 +4,6 @@
 
 'use strict';
 
-chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.set({color: '#3aa757'}, function() {
-    console.log('The color is green.');
-  });
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-    chrome.declarativeContent.onPageChanged.addRules([{
-      conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {hostEquals: 'developer.chrome.com'},
-      })],
-      actions: [new chrome.declarativeContent.ShowPageAction()]
-    }]);
-  });
-});
-
 var local = (function(){
     var setData = function(key,obj){
         var values = JSON.stringify(obj);
@@ -97,3 +83,8 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
 ["requestBody"]);
 
 //TODO figure out how to block http requests after sending
+
+chrome.browserAction.onClicked.addListener( function () {
+  chrome.tabs.create({'url': "chrome://newtab"});
+}
+);
