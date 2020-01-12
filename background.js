@@ -48,6 +48,11 @@ var local = (function(){
     return {set:setData,get:getData,update:updateData}
 })();
 
+var showAll = function(){
+    for (var i = 0; i < localStorage.length; i++)
+        localStorage.getItem(localStorage.key(i));
+};
+
 chrome.webRequest.onBeforeRequest.addListener(function(details) {
   chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
     if (details.method == "POST" && tabs[0] && details.tabId == tabs[0].id) {
