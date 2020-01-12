@@ -17,7 +17,8 @@
   "chrome_url_overrides":  {
     "newtab": "overview.html"
   },
-  "content_security_policy": "object-src 'self'; script-src 'self' 'sha256-8eVS1U7lAxhF42RAcbTsP3M2utmDXw4FQshHQkSkV7I=' https://unpkg.com/",
+  "content_security_policy": 
+    "object-src 'self'; script-src 'self' 'sha256-7hG7ZL3zD5Ka31eE6K8TuRGi3aTe0YG/BdCbGmatpuI=' https://unpkg.com/",
   "content_scripts": [
    {
      "matches": [

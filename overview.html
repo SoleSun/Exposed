@@ -92,12 +92,17 @@
   }
   let rows = [];
   const localStorageKeys = Object.entries(localStorage);
-  for (const key in localStorageKeys) {
-    const content = JSON.parse(window.localStorage.getItem(key));
-    const email = content.email;
-    const phone = content.phone;
-    const address = content.address;
-    const payment = content.payment;
+  console.log(localStorageKeys);
+  for (var i = 0; i < localStorageKeys.length; i++) {
+    const content = window.localStorage.getItem(localStorageKeys[0][0]);
+    console.log('here');
+    console.log(content);
+    console.log(localStorageKeys[0]);
+    console.log(localStorageKeys[1]);
+    const email = content.includes("email");
+    const phone = content.includes("phone");
+    const address = content.includes("address");
+    const payment = content.includes("payment");
     const newData = createData(key, email, phone, address, payment);
     rows.push(newData);
   }
