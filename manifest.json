@@ -18,7 +18,7 @@
     "newtab": "overview.html"
   },
   "content_security_policy": 
-    "object-src 'self'; script-src 'self' 'sha256-7hG7ZL3zD5Ka31eE6K8TuRGi3aTe0YG/BdCbGmatpuI=' https://unpkg.com/",
+    "object-src 'self'; script-src 'self' 'sha256-xN9TeejpRQzdLK4oiwSL2bdsm119a3YZEK+veC1Wg+k=' https://unpkg.com/",
   "content_scripts": [
    {
      "matches": [

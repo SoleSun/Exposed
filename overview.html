@@ -91,20 +91,9 @@
   return { name, email, phone, address, payment };
   }
   let rows = [];
-  const localStorageKeys = Object.entries(localStorage);
-  console.log(localStorageKeys);
-  /*
+  const localStorageKeys = Object.keys(localStorage);
   for (var i = 0; i < localStorageKeys.length; i++) {
-    const content = window.localStorage.getItem(localStorageKeys[0][0]);
-    console.log('here');
-    console.log(content);
-    console.log(localStorageKeys[0]);
-    console.log(localStorageKeys[1]);
-    const email = content.includes("email");
-    const phone = content.includes("phone");
-    const address = content.includes("address");
-    const payment = content.includes("payment"); */
-  for (const key in localStorageKeys) {
+    const key = localStorageKeys[0];
     const content = JSON.parse(window.localStorage.getItem(key));
     console.log(content);
     const email = content.email;
@@ -116,18 +105,15 @@
   }
   // dummy data
   const dummyData = [
-    createData('Amazon', true, true, true, false),
-    createData('Leetcode', true, false, false, false),
-    createData('Apple', true, true, true, true),
-    createData('Macleans', true, false, false, true),
-    createData('BMO', true, true, true, true),
-    createData('Canvas', true, false, false, false),
-    createData('UBC SSC', true, false, false, false),
-    createData('Dance Co', true, true, true, false),
-    createData('nwHacks', true, true, false, false),
+    createData('https://www.amazon.com/', true, true, true, false),
+    createData('https://www.leetcode.com', true, false, false, false),
+    createData('https://www.onshape.com/', true, false, false, true),
+    createData('https://www.bmo.com/', true, true, true, true),
+    createData('https://www.everlane.com/', false, false, true, true),
+    createData('https://www.eventbrite.ca/', false, true, true, false),
+    createData('https://www.nwhacks.com', true, true, false, false),
   ];
   rows = rows.concat(dummyData);
-
   function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -264,7 +250,6 @@
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       hover
