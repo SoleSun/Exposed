@@ -48,6 +48,11 @@ var local = (function(){
     return {set:setData,get:getData,update:updateData}
 })();
 
+var showAll = function(){
+    for (var i = 0; i < localStorage.length; i++)
+        localStorage.getItem(localStorage.key(i));
+};
+
 chrome.webRequest.onBeforeRequest.addListener(function(details) {
   chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
     if (details.method == "POST" && tabs[0] && details.tabId == tabs[0].id) {
@@ -79,17 +84,13 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
             console.log(info);
             let give = window.confirm("Are you sure you want to give this info?");
             if (give) {
-                local.set(initiator, info);
-                // chrome.storage.local.set({}, function(){
-                //     // Payment
-                //     // Phone
-                //     // Address
-                //     // Email
+                chrome.storage.local.set({initiator, info}, function() {
+                    console.log("Saved" + initiator);
+                });
             }
+            showAll();
         }
     }
-    // chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-    // });
   });
 },
 {urls: ["<all_urls>"]},

@@ -2,7 +2,13 @@
   "name": "Getting Started Example",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": ["activeTab", "declarativeContent", "storage", "tabs","<all_urls>", "webRequest"],
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage",
+    "tabs",
+    "<all_urls>",
+    "webRequest"],
   "options_page": "options.html",
   "background": {
     "scripts": ["background.js"],
