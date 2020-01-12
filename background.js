@@ -39,52 +39,80 @@ var showAll = function(){
         localStorage.getItem(localStorage.key(i));
 };
 
+// var cur_tab_id;
+// chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+//     if (tabs[0])
+//         cur_tab_id = tabs[0].id;
+// });
+//
 chrome.webRequest.onBeforeRequest.addListener(function(details) {
-  chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
-    if (details.method == "POST" && tabs[0] && details.tabId == tabs[0].id) {
-        var initiator = details.initiator;
-        if (!("requestBody" in details)) {
+    if (details.method === "POST" /*&& details.tabId === cur_tab_id*/) {
+        console.log("Filtering");
+        if (!("requestBody" in details && "formData" in details.requestBody)) {
             return;
         }
+
+        let initiator = details.initiator;
 
         // Debugging
         console.log(details);
         console.log(details.requestBody);
         console.log(details.requestBody.formData);
-        console.log(details.requestBody.formData.username);
-        console.log(details.requestBody.formData.email);
+        let post_data = details.requestBody.formData;
 
-        var info = [];
-        if ("email" in details.requestBody.formData)
-            info.push("email");
-        if ("address" in details.requestBody.formData)
-            info.push("address");
-        if ("payment" in details.requestBody.formData)
-            info.push("payment");
-        if ("phone" in details.requestBody.formData)
-            info.push("phone");
+        let key, info = [], empty = JSON.stringify([""]);
+        let keys = [];
+        for (key in post_data) {
+            let value = JSON.stringify(post_data[key]);
+            if (/email/.test(key) && !/use/.test(key) && value != empty) {
+                console.log(key);
+                keys.push(key);
+                if (info.indexOf("email") === -1)
+                    info.push("email");
+            }
+            if(/address/.test(key) && value != empty) {
+                console.log(key);
+                keys.push(key);
+                if (info.indexOf("address") === -1)
+                    info.push("address");
+            }
+            if(/cc.*number/.test(key) && value != empty) {
+                console.log(key);
+                keys.push(key);
+                if (info.indexOf("payment") === -1)
+                info.push("payment");
+            }
+            if(/phone/.test(key) && value != empty) {
+                console.log(key);
+                keys.push(key);
+                if (info.indexOf("phone") === -1)
+                    info.push("phone");
+            }
+        }
 
         // Grab the fields being sent to the person via the request
-        if (info.length != 0) {
-            console.log("Not empty");
-            console.log(info);
-            let give = window.confirm("Are you sure you want to give this info?");
+        if (info.length !== 0) {
+            console.log("Info being given: " + info);
+            var give = window.confirm("Are you sure you want to give this info?");
             if (give) {
-                chrome.storage.local.set({initiator, info}, function() {
-                    console.log("Saved" + initiator);
-                });
+                local.set(initiator, info);
+                // chrome.storage.local.set(dataObj, function() {
+                //     console.log("Saved " + initiator);
+                // });
             }
-            showAll();
+            return {cancel : !give};
+            console.log("Cancelling POST request: " + give);
         }
     }
-  });
+
+    return {cancel: false};
+  // });
 },
 {urls: ["<all_urls>"]},
-["requestBody"]);
-
-//TODO figure out how to block http requests after sending
+["blocking", "requestBody"]);
 
 chrome.browserAction.onClicked.addListener( function () {
   chrome.tabs.create({'url': "chrome://newtab"});
 }
 );
+
