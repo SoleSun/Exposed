@@ -17,3 +17,15 @@ chrome.runtime.onInstalled.addListener(function() {
     }]);
   });
 });
+
+chrome.webRequest.onBeforeRequest.addListener(function(details) {
+  /*if (details.method == "POST") {
+    alert("uwu");
+  }*/
+  chrome.tabs.query({active: true}, function(tabs) {
+    console.log(tabs);
+    chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+      console.log(response.farewell);
+    });
+  });
+}, {urls: ["<all_urls>"]});
