@@ -53,9 +53,15 @@ var showAll = function(){
         localStorage.getItem(localStorage.key(i));
 };
 
+// var cur_tab_id;
+// chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+//     if (tabs[0])
+//         cur_tab_id = tabs[0].id;
+// });
+//
 chrome.webRequest.onBeforeRequest.addListener(function(details) {
-  chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
-    if (details.method == "POST" && tabs[0] && details.tabId == tabs[0].id) {
+    if (details.method === "POST" /*&& details.tabId === cur_tab_id*/) {
+        console.log("Filtering");
         if (!("requestBody" in details && "formData" in details.requestBody)) {
             return;
         }
@@ -69,51 +75,52 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
         let post_data = details.requestBody.formData;
 
         let key, info = [], empty = JSON.stringify([""]);
+        let keys = [];
         for (key in post_data) {
             let value = JSON.stringify(post_data[key]);
-            if (/email/.test(key) && value != empty) {
+            if (/email/.test(key) && !/use/.test(key) && value != empty) {
                 console.log(key);
+                keys.push(key);
                 if (info.indexOf("email") === -1)
                     info.push("email");
             }
             if(/address/.test(key) && value != empty) {
                 console.log(key);
+                keys.push(key);
                 if (info.indexOf("address") === -1)
                     info.push("address");
             }
             if(/cc.*number/.test(key) && value != empty) {
                 console.log(key);
+                keys.push(key);
                 if (info.indexOf("payment") === -1)
                 info.push("payment");
             }
             if(/phone/.test(key) && value != empty) {
                 console.log(key);
+                keys.push(key);
                 if (info.indexOf("phone") === -1)
                     info.push("phone");
             }
         }
 
         // Grab the fields being sent to the person via the request
-        if (info.length != 0) {
-            console.log("Not empty");
+        if (info.length !== 0) {
             console.log("Info being given: " + info);
             var give = window.confirm("Are you sure you want to give this info?");
             if (give) {
-                let dataObj = {};
-                dataObj[initiator] = info;
-                console.log("Initiator is type of " + typeof(initiator));
-                console.log("Saving " + dataObj);
                 local.set(initiator, info);
                 // chrome.storage.local.set(dataObj, function() {
                 //     console.log("Saved " + initiator);
                 // });
             }
-            console.log("Should cancel " + !give);
+            return {cancel : !give};
+            console.log("Cancelling POST request: " + give);
         }
     }
 
-  return {cancel: !give};
-  });
+    return {cancel: false};
+  // });
 },
 {urls: ["<all_urls>"]},
 ["blocking", "requestBody"]);
