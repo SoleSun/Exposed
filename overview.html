@@ -94,6 +94,7 @@
   const localStorageKeys = Object.entries(localStorage);
   for (const key in localStorageKeys) {
     const content = JSON.parse(window.localStorage.getItem(key));
+    console.log(content);
     const email = content.email;
     const phone = content.phone;
     const address = content.address;
